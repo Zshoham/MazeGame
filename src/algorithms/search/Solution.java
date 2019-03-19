@@ -1,11 +1,12 @@
 package algorithms.search;
 
-import java.util.List;
+import java.util.ArrayList;
 
 public class Solution {
-    private List<Astate> path;
 
-    public List<Astate> getPath() {
+    private ArrayList<AState> path;
+
+    public ArrayList<AState> getSolutionPath() {
         return path;
     }
 }

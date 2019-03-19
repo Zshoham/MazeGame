@@ -2,7 +2,8 @@ package algorithms.search;
 
 import algorithms.mazeGenerators.Position;
 
-public class MazeState {
+public class MazeState extends AState {
+
     private Position position;
 
     public MazeState(Position position) {

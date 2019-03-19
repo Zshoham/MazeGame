@@ -1,6 +1,7 @@
 package algorithms.mazeGenerators;
 
 public abstract class AMazeGenerator implements IMazeGenerator{
+
     protected Maze maze; //TODO: is needed?
 
 
