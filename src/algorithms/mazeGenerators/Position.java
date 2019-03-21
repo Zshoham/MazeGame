@@ -1,6 +1,5 @@
 package algorithms.mazeGenerators;
 
-import java.util.Objects;
 
 public class Position {
     private int row;
@@ -9,6 +8,11 @@ public class Position {
     public Position(int row, int col) {
         this.row = row;
         this.col = col;
+    }
+
+    public Position(Position other) {
+        this.row = other.row;
+        this.col = other.col;
     }
 
     public int getRowIndex() {

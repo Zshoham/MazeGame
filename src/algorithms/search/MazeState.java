@@ -7,11 +7,11 @@ public class MazeState extends AState {
     private Position position;
 
     public MazeState(Position position) {
-        this.position = position;
+        this.position = new Position(position);
     }
 
     public MazeState(int row, int col) {
-        this.position=new Position(row, col);
+        this.position = new Position(row, col);
     }
 
     public Position getStatePosition() {

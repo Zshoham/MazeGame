@@ -6,10 +6,8 @@ public class SearchableMaze extends Maze implements ISearchable<MazeState> {
 
     private static ISearchHeuristic mazeHeuristic = new MazeSearchHeuristic();
 
-    private Maze maze;
-
     public SearchableMaze(Maze maze){
-        this.maze = maze;
+        super(maze);
     }
 
     @Override
@@ -23,7 +21,12 @@ public class SearchableMaze extends Maze implements ISearchable<MazeState> {
     }
 
     @Override
+    public MazeState getStartState() {
+        return new MazeState(this.getStartPosition());
+    }
+
+    @Override
     public MazeState getGoalState() {
-        return new MazeState(maze.getGoalPosition());
+        return new MazeState(this.getGoalPosition());
     }
 }

@@ -7,6 +7,8 @@ public interface ISearchable<T extends AState> {
 
     ISearchHeuristic getHeuristic();
 
+    T getStartState();
+
     T getGoalState();
 
 }
