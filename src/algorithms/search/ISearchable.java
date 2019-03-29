@@ -2,7 +2,6 @@ package algorithms.search;
 
 public interface ISearchable<T extends AState> {
 
-    //TODO: is it better to use generics in this way ?
     T[] getAllPossibleStates(T origin);
 
     ISearchHeuristic getHeuristic();
@@ -10,5 +9,7 @@ public interface ISearchable<T extends AState> {
     T getStartState();
 
     T getGoalState();
+
+    //TODO: add ability to iterate all the states.
 
 }

@@ -2,12 +2,14 @@ package algorithms.search;
 
 public class BestFirstSearch extends ABreadthFirstSearch {
 
-    private static String name = "Best First Search";
+
+    public BestFirstSearch() {
+        name = "Best First Search";
+    }
 
     @Override
     protected int getCost(AState destination, ISearchable domain) {
-        //TODO: if cost is added to AState then add the cost of the current state to the calculation.
-        return domain.getHeuristic().getDistance(destination, domain.getGoalState());
+        return domain.getHeuristic().getDistance(destination, domain.getGoalState()) + currentState.cost;
     }
 
     @Override

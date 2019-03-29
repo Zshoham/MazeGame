@@ -2,11 +2,9 @@ package algorithms.search;
 
 public class BreadthFirstSearch extends ABreadthFirstSearch {
 
-    private static String name = "Breadth First Search";
 
-    @Override
-    protected int getCost(AState destination, ISearchable domain) {
-        return 1;
+    public BreadthFirstSearch() {
+        name ="Breadth First Search";
     }
 
     @Override
@@ -17,5 +15,10 @@ public class BreadthFirstSearch extends ABreadthFirstSearch {
     @Override
     public int getNumberOfNodesEvaluated() {
         return 0;
+    }
+
+    @Override
+    protected int getCost(AState destination, ISearchable heuristic) {
+        return 1;
     }
 }
