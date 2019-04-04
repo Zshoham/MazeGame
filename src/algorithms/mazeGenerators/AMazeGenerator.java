@@ -3,14 +3,13 @@ package algorithms.mazeGenerators;
 import java.util.Random;
 
 
-public abstract class AMazeGenerator implements IMazeGenerator{
+public abstract class AMazeGenerator implements IMazeGenerator {
 
     protected Position start;
     protected Position goal;
 
 
-    public AMazeGenerator()
-    {
+    public AMazeGenerator() {
         this.start = null;
         this.goal = null;
     }
@@ -18,13 +17,12 @@ public abstract class AMazeGenerator implements IMazeGenerator{
     /**
      * Picks a starting position for the maze.
      * Sets {@link AMazeGenerator#start} to the chosen position.
+     *
      * @param rows the number of rows in the maze.
      * @param cols the number of columns in the maze.
      */
-    protected void pickStart(int rows, int cols)
-    {
-        while (start == null || start.equals(goal))
-        {
+    protected void pickStart(int rows, int cols) {
+        while (start == null || start.equals(goal)) {
             start = this.chooseEdgePosition(rows, cols);
             if (goal != null && (goal.getColumnIndex() == start.getColumnIndex() || goal.getRowIndex() == start.getRowIndex()))
                 start = null;
@@ -34,14 +32,13 @@ public abstract class AMazeGenerator implements IMazeGenerator{
     /**
      * Picks a goal position for the maze.
      * Sets {@link AMazeGenerator#goal} to the chosen position.
+     *
      * @param rows the number of rows in the maze.
      * @param cols the number of columns in the maze.
      */
-    protected void pickGoal(int rows, int cols)
-    {
-        while (goal == null || goal.equals(start))
-        {
-            goal = this.chooseEdgePosition(rows,cols);
+    protected void pickGoal(int rows, int cols) {
+        while (goal == null || goal.equals(start)) {
+            goal = this.chooseEdgePosition(rows, cols);
             if (start != null && (goal.getColumnIndex() == start.getColumnIndex() || goal.getRowIndex() == start.getRowIndex()))
                 goal = null;
         }
@@ -50,25 +47,24 @@ public abstract class AMazeGenerator implements IMazeGenerator{
     /**
      * Resets the algorithm making it ready to generate another maze.
      */
-    protected void reset()
-    {
+    protected void reset() {
         this.start = null;
         this.goal = null;
     }
 
     /**
      * Chooses a cell on one of the edges of the maze.
+     *
      * @param rows the number of rows in the maze.
      * @param cols the number of columns in the maze.
      * @return the chosen position.
      */
-    protected Position chooseEdgePosition(int rows, int cols)
-    {
+    protected Position chooseEdgePosition(int rows, int cols) {
         Random random = new Random(System.nanoTime());
         int edge = random.nextInt(4);
         int edgeOffset;
         Position res = null;
-        switch (edge){
+        switch (edge) {
             case 0:
                 edgeOffset = random.nextInt(cols);
                 res = new Position(0, edgeOffset);
@@ -91,10 +87,10 @@ public abstract class AMazeGenerator implements IMazeGenerator{
     }
 
 
-    public long measureAlgorithmTimeMillis(int rows, int cols){
+    public long measureAlgorithmTimeMillis(int rows, int cols) {
         long sTime = System.currentTimeMillis();
         generate(rows, cols);
         long eTime = System.currentTimeMillis();
-        return eTime-sTime;
+        return eTime - sTime;
     }
 }

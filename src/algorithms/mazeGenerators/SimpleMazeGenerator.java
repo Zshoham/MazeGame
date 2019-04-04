@@ -48,48 +48,49 @@ public class SimpleMazeGenerator extends AMazeGenerator {
 
     /**
      * Builds a path in the maze from current to goal.
-     * @param maze the maze where the path will be built.
+     *
+     * @param maze  the maze where the path will be built.
      * @param start the starting position of the path.
-     * @param goal the end position of the path.
+     * @param goal  the end position of the path.
      */
-    private void buildSolution(int[][] maze, Position start, Position goal)
-    {
-        if(start.equals(goal)) return;
-        start=getClosestToEnd(start, goal);
-        maze[start.getRowIndex()][start.getColumnIndex()]=0;
+    private void buildSolution(int[][] maze, Position start, Position goal) {
+        if (start.equals(goal)) return;
+        start = getClosestToEnd(start, goal);
+        maze[start.getRowIndex()][start.getColumnIndex()] = 0;
         buildSolution(maze, start, goal);
     }
 
     /**
      * Picks a neighbor of current closest to the goal position.
+     *
      * @param current the current position of the path generator.
-     * @param goal the goal position of the maze.
+     * @param goal    the goal position of the maze.
      * @return the neighbor position closest to goal from current's neighbors.
      */
     private Position getClosestToEnd(Position current, Position goal) {
-        Position[] neighbors=new Position[4];
-        Double[] distances=new Double[4];
-        neighbors[0]=new Position(current.getRowIndex()-1, current.getColumnIndex()); //up
-        neighbors[1]=new Position(current.getRowIndex(), current.getColumnIndex()+1); //right
-        neighbors[2]=new Position(current.getRowIndex()+1, current.getColumnIndex()); //down
-        neighbors[3]=new Position(current.getRowIndex(), current.getColumnIndex()-1); //left
+        Position[] neighbors = new Position[4];
+        Double[] distances = new Double[4];
+        neighbors[0] = new Position(current.getRowIndex() - 1, current.getColumnIndex()); //up
+        neighbors[1] = new Position(current.getRowIndex(), current.getColumnIndex() + 1); //right
+        neighbors[2] = new Position(current.getRowIndex() + 1, current.getColumnIndex()); //down
+        neighbors[3] = new Position(current.getRowIndex(), current.getColumnIndex() - 1); //left
 
         for (int i = 0; i < 4; i++)
-            distances[i]=goal.getDistance(neighbors[i]);
-        int closest=getMin(distances);
-        return  neighbors[closest];
+            distances[i] = goal.getDistance(neighbors[i]);
+        int closest = getMin(distances);
+        return neighbors[closest];
     }
 
     /**
      * @param arr array of double values.
      * @return the smallest value in the array.
      */
-    private int getMin(Double[] arr){
-        int minI=0;
+    private int getMin(Double[] arr) {
+        int minI = 0;
 
         for (int i = 0; i < 4; i++)
-            if(arr[i] < arr[minI])
-                minI=i;
+            if (arr[i] < arr[minI])
+                minI = i;
         return minI;
     }
 

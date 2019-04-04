@@ -2,6 +2,9 @@ package algorithms.search;
 
 import algorithms.mazeGenerators.Position;
 
+/**
+ * Represents a state in a maze search problem.
+ */
 public class MazeState extends AState {
 
     private Position position;
@@ -22,7 +25,7 @@ public class MazeState extends AState {
     public boolean equals(Object other) {
         if (other == null) return false;
         if (other instanceof MazeState) {
-            return ((MazeState)other).getStatePosition().equals(this.getStatePosition());
+            return ((MazeState) other).getStatePosition().equals(this.getStatePosition());
         }
         return false;
     }

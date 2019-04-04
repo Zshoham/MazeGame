@@ -2,6 +2,9 @@ package algorithms.search;
 
 import java.util.Comparator;
 
+/**
+ * Represents a state in a search problem.
+ */
 public abstract class AState {
 
     protected AState parent;
@@ -21,8 +24,10 @@ public abstract class AState {
     }
 
 
-    public static class StateComparator implements Comparator<AState>
-    {
+    /**
+     * A state comparator which compares two states based on their cost.
+     */
+    public static class StateCostComparator implements Comparator<AState> {
 
         @Override
         public int compare(AState first, AState second) {

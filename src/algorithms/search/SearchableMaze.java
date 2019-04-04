@@ -4,14 +4,20 @@ import algorithms.mazeGenerators.Maze;
 
 import java.util.LinkedList;
 
-
+/**
+ * Represents a maze search problem.
+ */
 public class SearchableMaze extends Maze implements ISearchable<MazeState> {
 
-    private static ISearchHeuristic mazeHeuristic = new MazeSearchHeuristic();
+    private static IDistanceHeuristic mazeHeuristic = new MazeDistanceHeuristic();
 
     private MazeState startState;
     private MazeState goalState;
 
+    /**
+     * Constructs a new searchable maze from a maze.
+     * @param maze
+     */
     public SearchableMaze(Maze maze){
         super(maze);
         startState = new MazeState(this.getStartPosition());
@@ -33,7 +39,7 @@ public class SearchableMaze extends Maze implements ISearchable<MazeState> {
     }
 
     @Override
-    public ISearchHeuristic getHeuristic() {
+    public IDistanceHeuristic getDistanceHeuristic() {
         return mazeHeuristic;
     }
 

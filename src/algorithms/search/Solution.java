@@ -1,10 +1,15 @@
 package algorithms.search;
 
-import algorithms.mazeGenerators.Maze;
 import algorithms.mazeGenerators.Position;
 
 import java.util.ArrayList;
 
+/**
+ * Wrapper for the solution of a search problem. <br/>
+ * contains a list representing the path from the start state
+ * to the goal state.
+ *
+ */
 public class Solution {
 
     private ArrayList<AState> path;
@@ -19,6 +24,9 @@ public class Solution {
         }
     }
 
+    /**
+     * @return the path from the start state to the goal state.
+     */
     public ArrayList<AState> getSolutionPath() {
         return path;
     }

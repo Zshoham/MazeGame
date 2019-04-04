@@ -9,13 +9,16 @@ public class RunSearchOnMaze {
     public static void main(String[] args) {
         IMazeGenerator mg = new MyMazeGenerator();
         //IMazeGenerator mg = new EmptyMazeGenerator();
-        Maze maze = mg.generate(30, 30);
+        Maze maze = mg.generate(50, 50);
         SearchableMaze searchableMaze = new SearchableMaze(maze);
-        //solveProblem(searchableMaze, new BreadthFirstSearch());
-        Solution sol=solveProblem(searchableMaze, new DepthFirstSearch());
-        //solveProblem(searchableMaze, new BestFirstSearch());
-
+        Solution sol;
+        sol = solveProblem(searchableMaze, new BreadthFirstSearch());
         searchableMaze.beautifyPrintSol(sol);
+        sol = solveProblem(searchableMaze, new DepthFirstSearch());
+        searchableMaze.beautifyPrintSol(sol);
+        sol = solveProblem(searchableMaze, new BestFirstSearch());
+        searchableMaze.beautifyPrintSol(sol);
+
     }
     private static Solution solveProblem(ISearchable domain, ISearchingAlgorithm searcher) {
         //Solve a searching problem with a searcher
@@ -24,9 +27,9 @@ public class RunSearchOnMaze {
                 //Printing Solution Path
                 System.out.println("Solution path:");
         ArrayList<AState> solutionPath = solution.getSolutionPath();
-        for (int i = 0; i < solutionPath.size(); i++) {
-            System.out.println(String.format("%s. %s",i,solutionPath.get(i)));
-        }
+//        for (int i = 0; i < solutionPath.size(); i++) {
+//            System.out.println(String.format("%s. %s",i,solutionPath.get(i)));
+//        }
         return solution;
     }
 }

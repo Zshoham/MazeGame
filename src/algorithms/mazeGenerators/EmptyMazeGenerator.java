@@ -27,6 +27,6 @@ public class EmptyMazeGenerator extends AMazeGenerator {
             }
         }
 
-        return new Maze(maze, new Position(0,0), new Position(rows - 1, cols - 1));
+        return new Maze(maze, new Position(0, 0), new Position(rows - 1, cols - 1));
     }
 }

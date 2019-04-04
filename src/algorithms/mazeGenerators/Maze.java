@@ -1,10 +1,9 @@
 package algorithms.mazeGenerators;
 
-import algorithms.search.AState;
 import algorithms.search.Solution;
 
 /**
- * Maze wrapper for the maze data.
+ * Wrapper for the maze data.
  * it holds the the array describing the maze
  * and the positions of the start and the goal of the maze.
  */
@@ -20,9 +19,10 @@ public class Maze {
 
     /**
      * Constructs a new maze.
-     * @param maze the array describing the maze.
+     *
+     * @param maze          the array describing the maze.
      * @param startPosition the starting position in the maze.
-     * @param goalPosition the goal position of the maze.
+     * @param goalPosition  the goal position of the maze.
      */
     public Maze(int[][] maze, Position startPosition, Position goalPosition) {
         this.maze = maze;
@@ -34,6 +34,7 @@ public class Maze {
 
     /**
      * Constructs a copy of a maze.
+     *
      * @param other the maze to be copied.
      */
     public Maze(Maze other) {
@@ -106,7 +107,7 @@ public class Maze {
                 } else if (i == this.goalPosition.getRowIndex() && j == this.goalPosition.getColumnIndex()) {//goalPosition
                     System.out.print(" " + "\u001B[46m" + " ");
                 } else if (maze[i][j] == 1) System.out.print(" " + "\u001B[45m" + " ");
-                else if(sol.contains(i, j))
+                else if (sol.contains(i, j))
                     System.out.print(" " + "\u001B[41m" + " ");
                 else System.out.print(" " + "\u001B[107m" + " ");
             }
