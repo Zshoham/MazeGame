@@ -9,7 +9,9 @@ public class BestFirstSearch extends ABreadthFirstSearch {
 
     @Override
     protected int getCost(AState destination, ISearchable domain) {
-        return domain.getHeuristic().getDistance(destination, domain.getGoalState()) + currentState.cost;
+        return domain.getHeuristic().getDistance(destination, domain.getGoalState()) //heuristic cost
+                + currentState.cost //actual cost of parent
+                + 1; // travel cost
     }
 
     @Override
@@ -17,8 +19,4 @@ public class BestFirstSearch extends ABreadthFirstSearch {
         return name;
     }
 
-    @Override
-    public int getNumberOfNodesEvaluated() {
-        return 0;
-    }
 }

@@ -24,23 +24,19 @@ public class SimpleMazeGenerator extends AMazeGenerator {
         reset();
         random = new Random(System.currentTimeMillis());
 
-       pickStart(rows, cols);
-       pickGoal(rows, cols);
-
         int[][] maze = new int[rows][cols];
-
-        maze[start.getColumnIndex()][start.getRowIndex()] = -1;
-        maze[goal.getColumnIndex()][goal.getRowIndex()] = -1;
 
         boolean isWall;
         for (int x = 0; x < cols; x++) {
             for (int y = 0; y < rows; y++) {
-                if(maze[x][y] != -1) {
-                    isWall = random.nextBoolean();
-                    maze[x][y] = isWall ? 1 : 0;
-                }
+                isWall = random.nextBoolean();
+                maze[x][y] = isWall ? 1 : 0;
+
             }
         }
+
+        pickStart(rows, cols);
+        pickGoal(rows, cols);
 
         maze[start.getColumnIndex()][start.getRowIndex()] = 0;
         maze[goal.getColumnIndex()][goal.getRowIndex()] = 0;

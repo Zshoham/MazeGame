@@ -1,5 +1,8 @@
 package algorithms.search;
 
+import algorithms.mazeGenerators.Maze;
+import algorithms.mazeGenerators.Position;
+
 import java.util.ArrayList;
 
 public class Solution {
@@ -18,5 +21,10 @@ public class Solution {
 
     public ArrayList<AState> getSolutionPath() {
         return path;
+    }
+
+    public boolean contains(int i, int j){
+        AState state = new MazeState(new Position(i, j));
+        return this.path.contains(state);
     }
 }

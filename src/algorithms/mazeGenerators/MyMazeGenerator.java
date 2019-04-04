@@ -49,8 +49,14 @@ public class MyMazeGenerator extends AMazeGenerator {
 
         makeMaze(aMaze, 0, cols - 1, 0, rows - 1);
 
-        pickStart(rows, cols);
-        pickGoal(rows, cols);
+        pickStart(rows-1, cols-1);
+        pickGoal(rows-1, cols-1);
+
+        aMaze[this.start.getRowIndex()][this.start.getColumnIndex()] = 0;
+        aMaze[this.goal.getRowIndex()][this.goal.getColumnIndex()] = 0;
+
+
+
 
         return new Maze(aMaze, this.start, this.goal);
     }

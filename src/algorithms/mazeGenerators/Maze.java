@@ -1,5 +1,8 @@
 package algorithms.mazeGenerators;
 
+import algorithms.search.AState;
+import algorithms.search.Solution;
+
 /**
  * Maze wrapper for the maze data.
  * it holds the the array describing the maze
@@ -9,9 +12,9 @@ public class Maze {
 
     private static final boolean DEBUG = true;
 
-    private int[][] maze;
-    private int rows;
-    private int cols;
+    protected int[][] maze;
+    protected int rows;
+    protected int cols;
     private Position startPosition;
     private Position goalPosition;
 
@@ -88,6 +91,23 @@ public class Maze {
                 } else if (i == this.goalPosition.getRowIndex() && j == this.goalPosition.getColumnIndex()) {//goalPosition
                     System.out.print(" " + "\u001B[46m" + " ");
                 } else if (maze[i][j] == 1) System.out.print(" " + "\u001B[45m" + " ");
+                else System.out.print(" " + "\u001B[107m" + " ");
+            }
+            System.out.println(" " + "\u001B[107m");
+        }
+    }
+
+    public void beautifyPrintSol(Solution sol) {
+        for (int i = 0; i < maze.length; i++) {
+            for (int j = 0; j < maze[i].length; j++) {
+
+                if (i == this.startPosition.getRowIndex() && j == this.startPosition.getColumnIndex()) {//startPosition
+                    System.out.print(" " + "\u001B[46m" + " ");
+                } else if (i == this.goalPosition.getRowIndex() && j == this.goalPosition.getColumnIndex()) {//goalPosition
+                    System.out.print(" " + "\u001B[46m" + " ");
+                } else if (maze[i][j] == 1) System.out.print(" " + "\u001B[45m" + " ");
+                else if(sol.contains(i, j))
+                    System.out.print(" " + "\u001B[41m" + " ");
                 else System.out.print(" " + "\u001B[107m" + " ");
             }
             System.out.println(" " + "\u001B[107m");

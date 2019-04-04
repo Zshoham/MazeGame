@@ -12,10 +12,6 @@ public class BreadthFirstSearch extends ABreadthFirstSearch {
         return name;
     }
 
-    @Override
-    public int getNumberOfNodesEvaluated() {
-        return 0;
-    }
 
     @Override
     protected int getCost(AState destination, ISearchable heuristic) {

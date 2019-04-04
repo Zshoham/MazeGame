@@ -1,33 +1,32 @@
 package algorithms.search;
 
-public abstract class AState {
+import java.util.Comparator;
 
-    public int color;
+public abstract class AState {
 
     protected AState parent;
 
     protected int cost;
 
     public AState() {
-        this.color = -1;
-        this.parent = null;
-    }
-
-    public AState(int color) {
-        this.color = color;
         this.parent = null;
     }
 
     public AState(AState parent) {
-        this.color = -1;
         this.parent = parent;
     }
 
     public AState(int color, AState parent) {
-        this.color = color;
         this.parent = parent;
     }
 
 
-    //TODO: add state cost ?
+    public static class StateComparator implements Comparator<AState>
+    {
+
+        @Override
+        public int compare(AState first, AState second) {
+            return Integer.compare(first.cost, second.cost);
+        }
+    }
 }

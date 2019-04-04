@@ -1,43 +1,41 @@
 package algorithms.search;
 
+import java.util.LinkedList;
+
 public class DepthFirstSearch extends ASearchingAlgorithm {
 
-    private static int WHITE    =   1;
-    private static int BLACK    =   2;
-    private static int GREY     =   3;
-
+    private LinkedList<AState> evalList;
 
     public DepthFirstSearch() {
         name = "Depth First Search";
+        this.evalList = new LinkedList<>();
     }
 
     @Override
     public Solution solve(ISearchable searchable) {
-        /*
-        Pseudo Code:
-            for each State in searchable set color to WHITE
-            set searchable.getStartState.parent to null
-            dfsVisit(searchable.getStartState)
-            return Solution(searchable.getStartState)
-         */
+        searchable.getStartState().parent = null;
+        this.numStatesEvaluated = 0;
+        dfsVisit(searchable, searchable.getStartState());
 
         return new Solution(searchable.getGoalState());
     }
 
-    public boolean dfsVisit(ISearchable domain, AState current) {
-        /*
-        Pseudo Code:
-            if current = domain.getStartState
-                return true
-            set color of current to GREY.
-            for each state s in domain.getAllPossibleStates(current)
-                if s is WHITE call dfsVisit(domain, s)
+    private void dfsVisit(ISearchable domain, AState current) {
+        this.numStatesEvaluated++;
+        if (current.equals(domain.getGoalState())) {
+            domain.getGoalState().parent = current.parent;
+            return;
+        }
 
-            set color of current to BLACK.
-            return false
-         */
+        evalList.add(current);
 
-         return false;
+        LinkedList<AState> neighbors = domain.getAllPossibleStates(current);
+        for(AState state : neighbors) {
+            if (!evalList.contains(state)) {
+                state.parent = current;
+                dfsVisit(domain, state);
+            }
+        }
     }
 
 
@@ -45,10 +43,5 @@ public class DepthFirstSearch extends ASearchingAlgorithm {
     @Override
     public String getName() {
         return name;
-    }
-
-    @Override
-    public int getNumberOfNodesEvaluated() {
-        return 0;
     }
 }
