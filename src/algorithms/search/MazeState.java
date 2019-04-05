@@ -30,4 +30,8 @@ public class MazeState extends AState {
         return false;
     }
 
+    @Override
+    public int hashCode() {
+        return this.position.hashCode();
+    }
 }

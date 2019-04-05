@@ -7,9 +7,9 @@ import java.util.TreeSet;
 
 public class RunSearchOnMaze {
     public static void main(String[] args) {
-        IMazeGenerator mg = new MyMazeGenerator();
-        //IMazeGenerator mg = new EmptyMazeGenerator();
-        Maze maze = mg.generate(50, 50);
+        //IMazeGenerator mg = new MyMazeGenerator();
+        IMazeGenerator mg = new SimpleMazeGenerator();
+        Maze maze = mg.generate(100, 100);
         SearchableMaze searchableMaze = new SearchableMaze(maze);
         Solution sol;
         sol = solveProblem(searchableMaze, new BreadthFirstSearch());
@@ -24,12 +24,12 @@ public class RunSearchOnMaze {
         //Solve a searching problem with a searcher
         Solution solution = searcher.solve(domain);
         System.out.println(String.format("'%s' algorithm - nodes evaluated: %s", searcher.getName(), searcher.getNumberOfNodesEvaluated()));
-                //Printing Solution Path
-                System.out.println("Solution path:");
+        //Printing Solution Path
+        System.out.println("Solution path:");
         ArrayList<AState> solutionPath = solution.getSolutionPath();
-//        for (int i = 0; i < solutionPath.size(); i++) {
-//            System.out.println(String.format("%s. %s",i,solutionPath.get(i)));
-//        }
+        for (int i = 0; i < solutionPath.size(); i++) {
+            System.out.println(String.format("%s. %s",i,solutionPath.get(i)));
+        }
         return solution;
     }
 }

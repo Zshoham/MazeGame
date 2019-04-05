@@ -1,5 +1,6 @@
 package algorithms.search;
 
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.PriorityQueue;
 
@@ -9,17 +10,20 @@ import java.util.PriorityQueue;
 public abstract class ABreadthFirstSearch extends ASearchingAlgorithm {
 
     private PriorityQueue<AState> openQueue;
-    private LinkedList<AState> closedList;
+    private HashSet<AState> openSet;
+    private HashSet<AState> closedSet;
 
     public ABreadthFirstSearch() {
         openQueue = new PriorityQueue<>(new AState.StateCostComparator());
-        closedList = new LinkedList<>();
+        closedSet = new HashSet<>();
+        openSet = new HashSet<>();
     }
 
     @Override
     public Solution solve(ISearchable domain) {
         domain.getStartState().cost = 0;
         openQueue.add(domain.getStartState());
+        openSet.add(domain.getStartState());
 
         while (!openQueue.isEmpty()) {
             this.currentState = openQueue.peek();
@@ -29,18 +33,20 @@ public abstract class ABreadthFirstSearch extends ASearchingAlgorithm {
             }
 
             openQueue.poll();
-            closedList.add(this.currentState);
+            openSet.remove(this.currentState);
+            closedSet.add(this.currentState);
             this.numStatesEvaluated++;
 
             LinkedList<AState> neighbors = domain.getAllPossibleStates(this.currentState);
             for (AState state : neighbors) {
-                if (!closedList.contains(state)) {
+                if (!closedSet.contains(state)) {
                     int newCost = getCost(state, domain);
 
-                    if (!openQueue.contains(state)) {
+                    if (!openSet.contains(state)) {
                         state.parent = this.currentState;
                         state.cost = newCost;
                         openQueue.add(state);
+                        openSet.add(state);
                     } else if (newCost < state.cost) {
                         state.parent = this.currentState;
                         state.cost = newCost;
@@ -48,7 +54,6 @@ public abstract class ABreadthFirstSearch extends ASearchingAlgorithm {
                 }
             }
         }
-
 
         return new Solution(domain.getGoalState());
     }

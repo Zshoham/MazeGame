@@ -1,5 +1,7 @@
 package algorithms.mazeGenerators;
 
+import java.util.Objects;
+
 /**
  * Represents the position of a cell in a maze. <br/>
  * consists of the row offset and the column offset of the cell.
@@ -71,5 +73,10 @@ public class Position {
         Position position = (Position) o;
         return row == position.row &&
                 col == position.col;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.row, this.col);
     }
 }
