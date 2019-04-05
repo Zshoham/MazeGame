@@ -16,9 +16,8 @@ public class SearchableMaze extends Maze implements ISearchable<MazeState> {
 
     /**
      * Constructs a new searchable maze from a maze.
-     * @param maze
      */
-    public SearchableMaze(Maze maze){
+    public SearchableMaze(Maze maze) {
         super(maze);
         startState = new MazeState(this.getStartPosition());
         goalState = new MazeState(this.getGoalPosition());

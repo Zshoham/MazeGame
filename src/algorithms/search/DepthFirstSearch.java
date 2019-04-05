@@ -18,6 +18,8 @@ public class DepthFirstSearch extends ASearchingAlgorithm {
 
     @Override
     public Solution solve(ISearchable domain) {
+        reset();
+
         domain.getStartState().parent = null;
         this.numStatesEvaluated = 0;
 
@@ -25,6 +27,7 @@ public class DepthFirstSearch extends ASearchingAlgorithm {
         Stack<AState> stack = new Stack<>();
         stack.push(this.currentState);
         while (!stack.isEmpty()) {
+            if (stack.peek().equals(domain.getGoalState())) break;
             this.currentState = stack.pop();
             if (!evalSet.contains(this.currentState)) {
                 evalSet.add(this.currentState);
@@ -36,6 +39,7 @@ public class DepthFirstSearch extends ASearchingAlgorithm {
                 }
             }
         }
+
         return new Solution(domain.getGoalState());
     }
 

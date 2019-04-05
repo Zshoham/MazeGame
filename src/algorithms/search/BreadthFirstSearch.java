@@ -19,7 +19,7 @@ public class BreadthFirstSearch extends ABreadthFirstSearch {
 
 
     @Override
-    protected int getCost(AState destination, ISearchable heuristic) {
-        return 0;
+    protected double getCost(AState destination, ISearchable heuristic) {
+        return 0d;
     }
 }

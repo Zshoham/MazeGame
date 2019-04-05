@@ -11,5 +11,5 @@ public interface IDistanceHeuristic<T extends AState> {
     /**
      * @return the heuristic distance between first and second.
      */
-    int getDistance(T first, T second);
+    double getDistance(T first, T second);
 }

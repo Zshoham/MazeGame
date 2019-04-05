@@ -7,8 +7,8 @@ import java.util.TreeSet;
 
 public class RunSearchOnMaze {
     public static void main(String[] args) {
-        //IMazeGenerator mg = new MyMazeGenerator();
-        IMazeGenerator mg = new SimpleMazeGenerator();
+        IMazeGenerator mg = new MyMazeGenerator();
+        //IMazeGenerator mg = new SimpleMazeGenerator();
         Maze maze = mg.generate(100, 100);
         SearchableMaze searchableMaze = new SearchableMaze(maze);
         Solution sol;

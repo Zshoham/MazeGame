@@ -7,6 +7,7 @@ public interface ISearchingAlgorithm {
 
     /**
      * Solves a given search problem.
+     *
      * @param domain the searching problem to be solved.
      * @return {@link Solution} to the problem.
      */

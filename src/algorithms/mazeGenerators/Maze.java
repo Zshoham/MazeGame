@@ -9,7 +9,7 @@ import algorithms.search.Solution;
  */
 public class Maze {
 
-    private static final boolean DEBUG = true;
+    private static final boolean DEBUG = false;
 
     protected int[][] maze;
     protected int rows;
@@ -85,8 +85,8 @@ public class Maze {
     }
 
     private void beautifyPrint() {
-        for (int i = 0; i < maze.length; i++) {
-            for (int j = 0; j < maze[i].length; j++) {
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
                 if (i == this.startPosition.getRowIndex() && j == this.startPosition.getColumnIndex()) {//startPosition
                     System.out.print(" " + "\u001B[46m" + " ");
                 } else if (i == this.goalPosition.getRowIndex() && j == this.goalPosition.getColumnIndex()) {//goalPosition
@@ -99,8 +99,8 @@ public class Maze {
     }
 
     public void beautifyPrintSol(Solution sol) {
-        for (int i = 0; i < maze.length; i++) {
-            for (int j = 0; j < maze[i].length; j++) {
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
 
                 if (i == this.startPosition.getRowIndex() && j == this.startPosition.getColumnIndex()) {//startPosition
                     System.out.print(" " + "\u001B[46m" + " ");

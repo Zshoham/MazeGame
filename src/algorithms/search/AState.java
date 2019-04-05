@@ -9,7 +9,7 @@ public abstract class AState {
 
     protected AState parent;
 
-    protected int cost;
+    protected double cost;
 
     public AState() {
         this.parent = null;
@@ -31,7 +31,7 @@ public abstract class AState {
 
         @Override
         public int compare(AState first, AState second) {
-            return Integer.compare(first.cost, second.cost);
+            return Double.compare(first.cost, second.cost);
         }
     }
 }

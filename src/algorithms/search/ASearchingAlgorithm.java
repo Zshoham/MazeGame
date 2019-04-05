@@ -14,4 +14,12 @@ public abstract class ASearchingAlgorithm implements ISearchingAlgorithm {
     public int getNumberOfNodesEvaluated() {
         return numStatesEvaluated;
     }
+
+    /**
+     * Resets the algorithm making it ready to be applied to another problem.
+     */
+    protected void reset() {
+        this.currentState = null;
+        this.numStatesEvaluated = 0;
+    }
 }

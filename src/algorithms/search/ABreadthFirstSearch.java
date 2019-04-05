@@ -5,7 +5,7 @@ import java.util.LinkedList;
 import java.util.PriorityQueue;
 
 /**
- * An abstract breadth searching algorithm.
+ * An abstract Breadth First Searching Algorithm.
  */
 public abstract class ABreadthFirstSearch extends ASearchingAlgorithm {
 
@@ -21,7 +21,10 @@ public abstract class ABreadthFirstSearch extends ASearchingAlgorithm {
 
     @Override
     public Solution solve(ISearchable domain) {
+        reset();
+
         domain.getStartState().cost = 0;
+        domain.getStartState().parent = null;
         openQueue.add(domain.getStartState());
         openSet.add(domain.getStartState());
 
@@ -35,12 +38,13 @@ public abstract class ABreadthFirstSearch extends ASearchingAlgorithm {
             openQueue.poll();
             openSet.remove(this.currentState);
             closedSet.add(this.currentState);
+
             this.numStatesEvaluated++;
 
             LinkedList<AState> neighbors = domain.getAllPossibleStates(this.currentState);
             for (AState state : neighbors) {
                 if (!closedSet.contains(state)) {
-                    int newCost = getCost(state, domain);
+                    double newCost = getCost(state, domain);
 
                     if (!openSet.contains(state)) {
                         state.parent = this.currentState;
@@ -60,14 +64,23 @@ public abstract class ABreadthFirstSearch extends ASearchingAlgorithm {
 
     /**
      * Calculates the cost that should be assigned to a state when visiting it.
-     * @param destination the state being visited.
-     * @param domain the searching problem.
+     *
+     * @param destination the that should be evaluated.
+     * @param domain      the searching problem.
      * @return the cost that should be assigned to the destination state.
      */
-    protected abstract int getCost(AState destination, ISearchable domain);
+    protected abstract double getCost(AState destination, ISearchable domain);
 
     @Override
     public int getNumberOfNodesEvaluated() {
         return this.numStatesEvaluated;
+    }
+
+    @Override
+    public void reset() {
+        super.reset();
+        openQueue = new PriorityQueue<>(new AState.StateCostComparator());
+        closedSet = new HashSet<>();
+        openSet = new HashSet<>();
     }
 }
