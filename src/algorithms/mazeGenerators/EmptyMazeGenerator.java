@@ -17,7 +17,8 @@ public class EmptyMazeGenerator extends AMazeGenerator {
      * is in the top left corner and the goal is in the bottom right corner.
      */
     @Override
-    public Maze generate(int rows, int cols) {
+    public Maze generate(int rows, int cols) throws IllegalArgumentException {
+        if (!validateInput(rows, cols)) throw new IllegalArgumentException("cannot create maze with " + cols + " columns and " + rows + " rows");
         reset();
         int[][] maze = new int[rows][cols];
 

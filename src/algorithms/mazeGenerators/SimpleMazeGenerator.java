@@ -20,7 +20,8 @@ public class SimpleMazeGenerator extends AMazeGenerator {
      * and a path from start to goal is guaranteed.
      */
     @Override
-    public Maze generate(int rows, int cols) {
+    public Maze generate(int rows, int cols) throws IllegalArgumentException {
+        if (!validateInput(rows, cols)) throw new IllegalArgumentException("cannot create maze with " + cols + " columns and " + rows + " rows");
         reset();
         random = new Random(System.currentTimeMillis());
 

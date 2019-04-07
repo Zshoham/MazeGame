@@ -52,6 +52,10 @@ public abstract class AMazeGenerator implements IMazeGenerator {
         this.goal = null;
     }
 
+    protected boolean validateInput(int rows, int cols) {
+        return cols >= 2 && rows >= 2;
+    }
+
     /**
      * Chooses a cell on one of the edges of the maze.
      *

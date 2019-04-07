@@ -36,7 +36,8 @@ public class MyMazeGenerator extends AMazeGenerator {
      * @return a maze generated using the Recursive Division Algorithm.
      */
     @Override
-    public Maze generate(int rows, int cols) {
+    public Maze generate(int rows, int cols) throws IllegalArgumentException {
+        if (!validateInput(rows, cols)) throw new IllegalArgumentException("cannot create maze with " + cols + " columns and " + rows + " rows");
         reset();
         int[][] aMaze = new int[rows][cols];
 
@@ -218,5 +219,10 @@ public class MyMazeGenerator extends AMazeGenerator {
         }
 
         return res;
+    }
+
+    @Override
+    protected boolean validateInput(int rows, int cols) {
+        return rows >= 3 && cols >= 3;
     }
 }
