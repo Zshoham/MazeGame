@@ -1,5 +1,6 @@
 package algorithms.mazeGenerators;
 
+import algorithms.search.MazeState;
 import algorithms.search.Solution;
 
 /**
@@ -98,7 +99,7 @@ public class Maze {
         }
     }
 
-    public void beautifyPrintSol(Solution sol) {
+    public void printSolution(Solution sol) {
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
 
@@ -107,7 +108,7 @@ public class Maze {
                 } else if (i == this.goalPosition.getRowIndex() && j == this.goalPosition.getColumnIndex()) {//goalPosition
                     System.out.print(" " + "\u001B[46m" + " ");
                 } else if (maze[i][j] == 1) System.out.print(" " + "\u001B[45m" + " ");
-                else if (sol.contains(i, j))
+                else if (sol.getSolutionPath().contains(new MazeState(i, j)))
                     System.out.print(" " + "\u001B[41m" + " ");
                 else System.out.print(" " + "\u001B[107m" + " ");
             }

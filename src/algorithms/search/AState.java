@@ -19,10 +19,6 @@ public abstract class AState {
         this.parent = parent;
     }
 
-    public AState(int color, AState parent) {
-        this.parent = parent;
-    }
-
 
     /**
      * A state comparator which compares two states based on their cost.

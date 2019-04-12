@@ -1,9 +1,7 @@
 import algorithms.mazeGenerators.*;
 import algorithms.search.*;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import  algorithms.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -45,7 +43,7 @@ class JUnitTestingBestFirstSearch {
         assert (bigSolution.getSolutionPath().size() > bigMaze.getStartPosition().getDistance(bigMaze.getGoalPosition()));
 
         Solution smallSolution = Solver.solve(smallMaze);
-        smallMaze.beautifyPrintSol(smallSolution);
+        smallMaze.printSolution(smallSolution);
 
         assert (smallSolution.getSolutionPath().size() <= Solver.getNumberOfNodesEvaluated());
         assert (smallSolution.getSolutionPath().size() > smallMaze.getStartPosition().getDistance(smallMaze.getGoalPosition()));
@@ -57,7 +55,7 @@ class JUnitTestingBestFirstSearch {
     void getNumberOfNodesEvaluated() {
         ISearchingAlgorithm Solver = new BestFirstSearch();
         Solution smallSolution = Solver.solve(smallMaze);
-        smallMaze.beautifyPrintSol(smallSolution);
+        smallMaze.printSolution(smallSolution);
 
         assert (Solver.getNumberOfNodesEvaluated() <= 44);
     }

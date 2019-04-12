@@ -2,8 +2,6 @@ package test;
 import algorithms.mazeGenerators.*;
 import algorithms.search.*;
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.TreeSet;
 
 public class RunSearchOnMaze {
     public static void main(String[] args) {
@@ -13,11 +11,11 @@ public class RunSearchOnMaze {
         SearchableMaze searchableMaze = new SearchableMaze(maze);
         Solution sol;
         sol = solveProblem(searchableMaze, new BreadthFirstSearch());
-        searchableMaze.beautifyPrintSol(sol);
+        searchableMaze.printSolution(sol);
         sol = solveProblem(searchableMaze, new DepthFirstSearch());
-        searchableMaze.beautifyPrintSol(sol);
+        searchableMaze.printSolution(sol);
         sol = solveProblem(searchableMaze, new BestFirstSearch());
-        searchableMaze.beautifyPrintSol(sol);
+        searchableMaze.printSolution(sol);
 
     }
     private static Solution solveProblem(ISearchable domain, ISearchingAlgorithm searcher) {

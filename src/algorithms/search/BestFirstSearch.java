@@ -2,7 +2,7 @@ package algorithms.search;
 
 /**
  * A searching algorithm based on the Best First Search algorithm
- * that uses a heuristic to calculate the cost of visiting states.
+ * that uses a heuristic similar to the A* algorithm to calculate the cost of visiting states.
  */
 public class BestFirstSearch extends ABreadthFirstSearch {
 
