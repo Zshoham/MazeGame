@@ -3,6 +3,11 @@ package algorithms.mazeGenerators;
 import algorithms.search.MazeState;
 import algorithms.search.Solution;
 
+import javax.management.RuntimeErrorException;
+import java.io.InvalidObjectException;
+import java.nio.ByteBuffer;
+import java.util.concurrent.ExecutionException;
+
 /**
  * Wrapper for the maze data.
  * it holds the the array describing the maze
@@ -50,6 +55,71 @@ public class Maze {
     }
 
     /**
+     * Deserialize's the mazeData and constructs a maze accordingly. <br/>
+     * The data format is described in the serialization method {@link Maze#toByteArray()}
+     * @param mazeData the serialized maze data.
+     * @see Maze#toByteArray()
+     */
+    public Maze(byte[] mazeData) {
+        int pointer = 0;
+        this.cols = deserializeShort(pointer, mazeData);
+        pointer += 2;
+        this.rows = deserializeShort(pointer, mazeData);
+        pointer += 2;
+        this.startPosition = deserializeEdgePosition(pointer, mazeData);
+        pointer += 3;
+        this.goalPosition = deserializeEdgePosition(pointer, mazeData);
+        pointer += 3;
+
+        byte b0 = mazeData[pointer + 3], b1 = mazeData[pointer + 2], b2 = mazeData[pointer + 1], b3 = mazeData[pointer];
+        pointer += 4;
+
+        int size = (b3 << 24) | ((b2 & 0xff) << 16) | ((b1 & 0xff) << 8) | (b0 & 0xff);
+        assert (size != 14 + (rows * cols)); //TODO: change to an exception or return null ?
+
+        for (int y = 0; y < this.rows; y++) {
+            for (int x = 0; x < this.cols; x++) {
+                assert (mazeData[pointer + (x + y * cols)] > 1 || mazeData[pointer + (x + y * cols)] < 0); //TODO: change to an exception or return null ?
+                this.maze[y][x] = mazeData[pointer + (x + y * cols)];
+            }
+        }
+    }
+
+    private Position deserializeEdgePosition(int pointer, byte[] data){
+        int x = 0, y = 0;
+
+        switch (data[pointer]) {
+            case 1:
+                pointer++;
+                y = deserializeShort(pointer, data);
+                break;
+            case 2:
+                x = cols - 1;
+                pointer++;
+                y = deserializeShort(pointer, data);
+                break;
+            case 3:
+                pointer++;
+                x = deserializeShort(pointer, data);
+                break;
+            case 4:
+                y = rows - 1;
+                pointer++;
+                x = deserializeShort(pointer, data);
+                break;
+        }
+
+        return new Position(y, x);
+    }
+
+    private short deserializeShort(int pointer, byte[] data) {
+        byte b0 = data[pointer + 1];
+        byte b1 = data[pointer];
+
+        return (short) (((b1 & 0xff) << 8) | (b0 & 0xff));
+    }
+
+    /**
      * @return the starting position of the maze.
      */
     public Position getStartPosition() {
@@ -61,6 +131,91 @@ public class Maze {
      */
     public Position getGoalPosition() {
         return goalPosition;
+    }
+
+    //TODO: depending on how the size should be handled, maybe make size the first part of the header.
+    /**
+     * Serializes the maze data into a byte array representation according to the following specification:
+     *
+     * |--------------------------------------------------| <br/>
+     * |Header:                                           | <br/>
+     * | * 2 bytes for width of the maze (short).         | <br/>
+     * | * 2 bytes for the height of the maze (short).    | <br/>
+     * | * 3 bytes for start position (1 byte + 1 short ).| <br/>
+     * | * 3 bytes for goal position. (1 byte + 1 short ).| <br/>
+     * | * 4 bytes for size (int).                        | <br/>
+     * | -------------------------------------------------- <br/>
+     * |Data:                                             | <br/>
+     * | the maze stretched into a long array starting at | <br/>
+     * | the top left corner and going right over all the | <br/>
+     * | columns then doing the same for the next row     | <br/>
+     * | until the final row is serialized.               | <br/>
+     * |--------------------------------------------------| <br/>
+     *
+     * note: each of the edge positions is serialized in the following manner:  <br/>
+     *  * 1 byte determines the wall the position belongs to.                   <br/>
+     *      - 1 is for the left wall.                                           <br/>
+     *      - 2 is for the right wall.                                          <br/>
+     *      - 3 is for the top wall.                                            <br/>
+     *      - 4 is for the bottom wall.                                         <br/>
+     *  * 2 bytes (short) to determine the offset of the position on the wall   <br/>
+     *      - positive offset is right on the bottom and top walls.             <br/>
+     *      - positive offset is down on the right and left walls.              <br/>
+     *
+     * @return the serialized byte array.
+     */
+    public byte[] toByteArray() {
+        int size = 14 + (this.rows * this.cols);
+
+        byte[] res = new byte[size];
+        int pointer = 0;
+
+        pointer = serializeShort((short) this.cols, pointer, res);
+        pointer = serializeShort((short) this.rows, pointer, res);
+        pointer = serializeEdgePosition(this.startPosition, pointer, res);
+        pointer = serializeEdgePosition(this.goalPosition, pointer, res);
+
+        res[pointer++] = (byte)(size >> 24);
+        res[pointer++] = (byte)(size >> 16);
+        res[pointer++] = (byte)(size >> 8);
+        res[pointer++] = (byte)(size & 0xff);
+
+        for (int y = 0; y < this.rows; y++) {
+            for (int x = 0; x < this.cols; x++) {
+                res[pointer + (x + y * cols)] = (byte) this.maze[y][x];
+            }
+        }
+
+        return res;
+    }
+
+    private int serializeEdgePosition(Position pos, int pointer, byte[] dest) {
+        short offset = 0;
+        if (pos.getColumnIndex() == 0) {
+            dest[pointer++] = 1;
+            offset = (short) pos.getRowIndex();
+        }
+        else if (pos.getColumnIndex() == this.cols - 1) {
+            dest[pointer++] = 2;
+            offset = (short) pos.getRowIndex();
+        }
+        else if (pos.getRowIndex() == 0) {
+            dest[pointer++] = 3;
+            offset = (short) pos.getColumnIndex();
+        }
+        else if (pos.getRowIndex() == this.rows - 1) {
+            dest[pointer++] = 4;
+            offset = (short) pos.getColumnIndex();
+        }
+        serializeShort(offset, pointer, dest);
+
+        return pointer;
+    }
+
+    private int serializeShort(short s, int pointer, byte[] dest) {
+        dest[pointer++] = (byte) (s >> 8);
+        dest[pointer++] = (byte) (s & 0xff);
+        return pointer;
     }
 
     /**
