@@ -50,8 +50,8 @@ public class MyMazeGenerator extends AMazeGenerator {
 
         makeMaze(aMaze, 0, cols - 1, 0, rows - 1);
 
-        pickStart(rows - 1, cols - 1);
-        pickGoal(rows - 1, cols - 1);
+        pickStart(rows, cols);
+        pickGoal(rows, cols);
 
         aMaze[this.start.getRowIndex()][this.start.getColumnIndex()] = 0;
         aMaze[this.goal.getRowIndex()][this.goal.getColumnIndex()] = 0;
@@ -98,8 +98,6 @@ public class MyMazeGenerator extends AMazeGenerator {
      * @param bottom the bottom most index of the maze.
      */
     private void davideVertical(int[][] maze, int left, int right, int top, int bottom) {
-        Random random = new Random(System.nanoTime());
-
         int divisionPoint = chooseDivision(top, bottom);
 
         for (int x = left; x < right + 1; x++) {
@@ -125,8 +123,6 @@ public class MyMazeGenerator extends AMazeGenerator {
      * @param bottom the bottom most index of the maze.
      */
     private void davideHorizontal(int[][] maze, int left, int right, int top, int bottom) {
-        Random random = new Random(System.nanoTime());
-
         int divisionPoint = chooseDivision(left, right);
 
         for (int y = top; y < bottom + 1; y++) {
@@ -201,19 +197,19 @@ public class MyMazeGenerator extends AMazeGenerator {
 
         switch (edge) {
             case 0:
-                edgeOffset = chooseClearing(0, cols);
+                edgeOffset = chooseClearing(0, cols - 1);
                 res = new Position(0, edgeOffset);
                 break;
             case 1:
-                edgeOffset = chooseClearing(0, cols);
+                edgeOffset = chooseClearing(0, cols - 1);
                 res = new Position(rows - 1, edgeOffset);
                 break;
             case 2:
-                edgeOffset = chooseClearing(0, rows);
+                edgeOffset = chooseClearing(0, rows - 1);
                 res = new Position(edgeOffset, 0);
                 break;
             case 3:
-                edgeOffset = chooseClearing(0, rows);
+                edgeOffset = chooseClearing(0, rows - 1);
                 res = new Position(edgeOffset, cols - 1);
                 break;
         }
