@@ -1,12 +1,8 @@
 package algorithms.mazeGenerators;
 
+import IO.Serializer;
 import algorithms.search.MazeState;
 import algorithms.search.Solution;
-
-import javax.management.RuntimeErrorException;
-import java.io.InvalidObjectException;
-import java.nio.ByteBuffer;
-import java.util.concurrent.ExecutionException;
 
 /**
  * Wrapper for the maze data.
@@ -16,6 +12,8 @@ import java.util.concurrent.ExecutionException;
 public class Maze {
 
     private static final boolean DEBUG = false;
+
+    public static final int HEADER_LENGTH = 14;
 
     protected int[][] maze;
     protected int rows;
@@ -62,21 +60,21 @@ public class Maze {
      */
     public Maze(byte[] mazeData) {
         int pointer = 0;
-        this.cols = deserializeShort(pointer, mazeData);
+        this.cols = Serializer.readShort(pointer, mazeData);
         pointer += 2;
-        this.rows = deserializeShort(pointer, mazeData);
+        this.rows = Serializer.readShort(pointer, mazeData);
         pointer += 2;
         this.startPosition = deserializeEdgePosition(pointer, mazeData);
         pointer += 3;
         this.goalPosition = deserializeEdgePosition(pointer, mazeData);
         pointer += 3;
 
-        byte b0 = mazeData[pointer + 3], b1 = mazeData[pointer + 2], b2 = mazeData[pointer + 1], b3 = mazeData[pointer];
-        pointer += 4;
+       int size = Serializer.readInt(pointer, mazeData);
+       pointer += 4;
 
-        int size = (b3 << 24) | ((b2 & 0xff) << 16) | ((b1 & 0xff) << 8) | (b0 & 0xff);
-        assert (size != 14 + (rows * cols)); //TODO: change to an exception or return null ?
+        assert (size != HEADER_LENGTH + (rows * cols)); //TODO: change to an exception or return null ?
 
+        this.maze = new int[rows][cols];
         for (int y = 0; y < this.rows; y++) {
             for (int x = 0; x < this.cols; x++) {
                 assert (mazeData[pointer + (x + y * cols)] > 1 || mazeData[pointer + (x + y * cols)] < 0); //TODO: change to an exception or return null ?
@@ -91,32 +89,25 @@ public class Maze {
         switch (data[pointer]) {
             case 1:
                 pointer++;
-                y = deserializeShort(pointer, data);
+                y = Serializer.readShort(pointer, data);
                 break;
             case 2:
                 x = cols - 1;
                 pointer++;
-                y = deserializeShort(pointer, data);
+                y = Serializer.readShort(pointer, data);
                 break;
             case 3:
                 pointer++;
-                x = deserializeShort(pointer, data);
+                x = Serializer.readShort(pointer, data);
                 break;
             case 4:
                 y = rows - 1;
                 pointer++;
-                x = deserializeShort(pointer, data);
+                x = Serializer.readShort(pointer, data);
                 break;
         }
 
         return new Position(y, x);
-    }
-
-    private short deserializeShort(int pointer, byte[] data) {
-        byte b0 = data[pointer + 1];
-        byte b1 = data[pointer];
-
-        return (short) (((b1 & 0xff) << 8) | (b0 & 0xff));
     }
 
     /**
@@ -165,21 +156,21 @@ public class Maze {
      * @return the serialized byte array.
      */
     public byte[] toByteArray() {
-        int size = 14 + (this.rows * this.cols);
+        int size = HEADER_LENGTH + (this.rows * this.cols);
 
         byte[] res = new byte[size];
         int pointer = 0;
 
-        pointer = serializeShort((short) this.cols, pointer, res);
-        pointer = serializeShort((short) this.rows, pointer, res);
+        //write the header.
+        pointer = Serializer.write((short) this.cols, pointer, res);
+        pointer = Serializer.write((short) this.rows, pointer, res);
         pointer = serializeEdgePosition(this.startPosition, pointer, res);
         pointer = serializeEdgePosition(this.goalPosition, pointer, res);
 
-        res[pointer++] = (byte)(size >> 24);
-        res[pointer++] = (byte)(size >> 16);
-        res[pointer++] = (byte)(size >> 8);
-        res[pointer++] = (byte)(size & 0xff);
+        //write the size.
+        pointer = Serializer.write(size, pointer, res);
 
+        //write the maze itself.
         for (int y = 0; y < this.rows; y++) {
             for (int x = 0; x < this.cols; x++) {
                 res[pointer + (x + y * cols)] = (byte) this.maze[y][x];
@@ -207,14 +198,8 @@ public class Maze {
             dest[pointer++] = 4;
             offset = (short) pos.getColumnIndex();
         }
-        serializeShort(offset, pointer, dest);
+        pointer = Serializer.write(offset, pointer, dest);
 
-        return pointer;
-    }
-
-    private int serializeShort(short s, int pointer, byte[] dest) {
-        dest[pointer++] = (byte) (s >> 8);
-        dest[pointer++] = (byte) (s & 0xff);
         return pointer;
     }
 
@@ -230,8 +215,8 @@ public class Maze {
             return;
         }
 
-        for (int x = 0; x < cols; x++) {
-            for (int y = 0; y < rows; y++) {
+        for (int y = 0; y < rows; y++) {
+            for (int x = 0; x < cols; x++) {
                 if (startPosition.equals(new Position(y, x))) System.out.print("S ");
                 else if (goalPosition.equals(new Position(y, x))) System.out.print("E ");
                 else System.out.print(maze[y][x] + " ");

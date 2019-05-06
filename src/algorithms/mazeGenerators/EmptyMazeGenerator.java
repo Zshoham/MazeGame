@@ -24,7 +24,7 @@ public class EmptyMazeGenerator extends AMazeGenerator {
 
         for (int x = 0; x < cols; x++) {
             for (int y = 0; y < rows; y++) {
-                maze[x][y] = 0;
+                maze[y][x] = 0;
             }
         }
 

@@ -3,12 +3,13 @@ package Server;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Server {
 
     private int port;
     private int maxListenTime;
-    private volatile boolean isRunning;
+    private volatile AtomicBoolean isRunning;
 
     private IServerStrategy strategy;
 
@@ -23,11 +24,11 @@ public class Server {
             //TODO: add thread pool support.
             ServerSocket serverSocket = new ServerSocket(port);
             serverSocket.setSoTimeout(maxListenTime);
-            this.isRunning = true;
+            this.isRunning.set(true);
             System.out.println("Server started at " + serverSocket);
             System.out.println("Server strategy: " + strategy);
             System.out.println("Server is waiting for clients...");
-            while (isRunning) {
+            while (isRunning.get()) {
                 Socket clientSocket = serverSocket.accept();
                 System.out.println("Client connection established at " + clientSocket);
                 try {
@@ -46,7 +47,7 @@ public class Server {
     }
 
     public void stop() {
-        this.isRunning = false;
+        this.isRunning.set(false);
         System.out.println("Server successfully closed.");
     }
 
