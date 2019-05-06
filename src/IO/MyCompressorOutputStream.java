@@ -4,6 +4,7 @@ import algorithms.mazeGenerators.Maze;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -43,7 +44,9 @@ public class MyCompressorOutputStream extends OutputStream {
         for (int i = 0; i < res.length; i++) res[i] = compressedData.get(i);
         this.compressionRate = (float)res.length / (float)data.length;
 
-        this.stream.write(res);
+        if (stream instanceof ObjectOutputStream)
+            ((ObjectOutputStream)stream).writeObject(res);
+        else this.stream.write(res);
     }
 
     private ArrayList<Byte> squashCompress(byte[] data) {

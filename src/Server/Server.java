@@ -3,6 +3,9 @@ package Server;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Server {
@@ -13,16 +16,25 @@ public class Server {
 
     private IServerStrategy strategy;
 
+    private ThreadPoolExecutor clientPool;
+    private ServerSocket serverSocket;
+
     public Server(int port, int maxListenTime, IServerStrategy serverStrategy) {
         this.port = port;
         this.maxListenTime = maxListenTime;
         this.strategy = serverStrategy;
+        isRunning = new AtomicBoolean(false);
     }
 
     public void start() {
+        new Thread( () -> run(), "Server Thread").start();
+    }
+
+    private void run() {
+        clientPool = (ThreadPoolExecutor) Executors.newCachedThreadPool();
+        clientPool.setCorePoolSize(Runtime.getRuntime().availableProcessors() * 2);
         try {
-            //TODO: add thread pool support.
-            ServerSocket serverSocket = new ServerSocket(port);
+            serverSocket = new ServerSocket(port);
             serverSocket.setSoTimeout(maxListenTime);
             this.isRunning.set(true);
             System.out.println("Server started at " + serverSocket);
@@ -30,17 +42,11 @@ public class Server {
             System.out.println("Server is waiting for clients...");
             while (isRunning.get()) {
                 Socket clientSocket = serverSocket.accept();
-                System.out.println("Client connection established at " + clientSocket);
-                try {
-                    strategy.executeStrategy(clientSocket.getInputStream(), clientSocket.getOutputStream());
-                    clientSocket.getInputStream().close();
-                    clientSocket.getOutputStream().close();
-                    clientSocket.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                clientPool.execute(new ClientTask(clientSocket, strategy));
             }
             serverSocket.close();
+        } catch (SocketTimeoutException e) {
+            if (isRunning.get()) e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -48,8 +54,32 @@ public class Server {
 
     public void stop() {
         this.isRunning.set(false);
+        clientPool.shutdown();
         System.out.println("Server successfully closed.");
     }
 
+
+    private static class ClientTask implements Runnable {
+
+        private Socket clientSocket;
+        private IServerStrategy strategy;
+
+        public ClientTask(Socket clientSocket, IServerStrategy strategy) {
+            this.clientSocket = clientSocket;
+            this.strategy = strategy;
+        }
+
+        @Override
+        public void run() {
+            System.out.println("Client connection established at " + clientSocket);
+            try {
+                strategy.executeStrategy(clientSocket.getInputStream(), clientSocket.getOutputStream());
+                clientSocket.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            System.out.println("Client Disconnected from Server");
+        }
+    }
 
 }

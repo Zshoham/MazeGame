@@ -2,10 +2,12 @@ package algorithms.search;
 
 import algorithms.mazeGenerators.Position;
 
+import java.io.Serializable;
+
 /**
  * Represents a state in a maze search problem.
  */
-public class MazeState extends AState {
+public class MazeState extends AState implements Serializable {
 
     private Position position;
 

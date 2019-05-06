@@ -1,5 +1,6 @@
 package algorithms.search;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -7,7 +8,7 @@ import java.util.ArrayList;
  * contains a list representing the path from the start state
  * to the goal state.
  */
-public class Solution {
+public class Solution implements Serializable {
 
     private ArrayList<AState> path;
 

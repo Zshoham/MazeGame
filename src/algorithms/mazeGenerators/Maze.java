@@ -4,12 +4,14 @@ import IO.Serializer;
 import algorithms.search.MazeState;
 import algorithms.search.Solution;
 
+import java.io.Serializable;
+
 /**
  * Wrapper for the maze data.
  * it holds the the array describing the maze
  * and the positions of the start and the goal of the maze.
  */
-public class Maze {
+public class Maze implements Serializable {
 
     private static final boolean DEBUG = false;
 
