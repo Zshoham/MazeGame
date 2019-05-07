@@ -6,4 +6,7 @@ import java.io.OutputStream;
 public interface IServerStrategy {
 
     void executeStrategy(InputStream inFromClient, OutputStream outToClient);
+
+    void finalizeStrategy();
+
 }

@@ -8,7 +8,7 @@ import java.io.*;
 
 public class ServerStrategyGenerateMaze implements IServerStrategy {
 
-    private static IMazeGenerator generator = new MyMazeGenerator();
+    private static IMazeGenerator generator = Configurations.getMazeGenerator();
 
     @Override
     public void executeStrategy(InputStream inFromClient, OutputStream outToClient) {
@@ -23,9 +23,11 @@ public class ServerStrategyGenerateMaze implements IServerStrategy {
             if (mazeSize.length != 2) System.out.println("ERROR: client sent invalid message");
 
             //serialize the maze.
-            byte[] mazeData = generator.generate(mazeSize[0], mazeSize[1]).toByteArray();
+            byte[] mazeData = generator
+                    .generate(mazeSize[Configurations.mazeSizesYIndex], mazeSize[Configurations.mazeSizesXIndex])
+                    .toByteArray();
 
-            //compress the maze and write it to the output stream.
+            //compress the maze and send it to the client.
             MyCompressorOutputStream compressor = new MyCompressorOutputStream(toClient);
             compressor.write(mazeData);
             toClient.flush();
@@ -37,5 +39,10 @@ public class ServerStrategyGenerateMaze implements IServerStrategy {
         }
 
 
+    }
+
+    @Override
+    public void finalizeStrategy() {
+        System.out.println("Maze Generator shutting down.");
     }
 }

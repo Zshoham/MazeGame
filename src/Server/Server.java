@@ -32,7 +32,7 @@ public class Server {
 
     private void run() {
         clientPool = (ThreadPoolExecutor) Executors.newCachedThreadPool();
-        clientPool.setCorePoolSize(Runtime.getRuntime().availableProcessors() * 2);
+        clientPool.setCorePoolSize(Configurations.getThreadCount());
         try {
             serverSocket = new ServerSocket(port);
             serverSocket.setSoTimeout(maxListenTime);
@@ -55,6 +55,7 @@ public class Server {
     public void stop() {
         this.isRunning.set(false);
         clientPool.shutdown();
+        this.strategy.finalizeStrategy();
         System.out.println("Server successfully closed.");
     }
 
