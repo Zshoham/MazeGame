@@ -49,14 +49,24 @@ public class MyCompressorOutputStream extends OutputStream {
         else this.stream.write(res);
     }
 
+    /**
+     * Compress the given maze data by a factor approaching 1/8.
+     * The exact size of the compressed data can be determined by the
+     * following formula - c = (n-15) * (1/8) + (n-14) % 8
+     * @param data the maze data to compress.
+     * @return ArrayList containing the compressed data.
+     */
     private ArrayList<Byte> squashCompress(byte[] data) {
         ArrayList<Byte> compressedData = new ArrayList<>();
+        //copy the header.
         for (int i = 0; i < Maze.HEADER_LENGTH; i++) compressedData.add(data[i]);
 
         for (int i = Maze.HEADER_LENGTH; i < data.length; i += 8) {
             byte bitSet = 0;
             for (int j = 0; j < 8 && (i + j) < data.length; j++) {
+                //push the bit added to the set left (first time does nothing).
                 bitSet = (byte) (bitSet << 1);
+                //insert the bit of the maze into the right most position of the set.
                 bitSet = (byte) (bitSet | data[i + j]);
             }
             compressedData.add(bitSet);

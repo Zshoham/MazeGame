@@ -20,6 +20,9 @@ public final class Configurations {
 
     private static ServerProperties properties = new ServerProperties(configPath);
 
+    /**
+     * @return the number of threads that the server should have in the thread pool.
+     */
     public static int getThreadCount() {
         if(!properties.isCPUThreads) return properties.threadCount;
         else return Runtime.getRuntime().availableProcessors() * properties.threadCount;
@@ -29,25 +32,31 @@ public final class Configurations {
 
     public static ISearchingAlgorithm getMazeSolver() { return properties.mazeSolver; }
 
-    public static final int mazeSizesYIndex = 0;
+    /**
+     * The index of the array the Generate Maze Strategy gets where the numbers of rows in the maze is stores.
+     */
+    public static final int mazeSizesRowsIndex = 0;
 
-    public static final int mazeSizesXIndex = 1;
+    /**
+     * The index of the array the Generate Maze Strategy gets where the numbers of columns in the maze is stores.
+     */
+    public static final int mazeSizesColsIndex = 1;
 
-    public static final boolean DEBUG = false;
+    public static final boolean DEBUG = true;
 
-
-
-
+    /**
+     * A wrapper class that stores the configurations and handles their storage.
+     */
     private static class ServerProperties {
 
-        private static String description = "Server Properties File\n" +
-                "Server_Thread_Count - may be a number or cpu,number meaning the server will have number*" +
-                "times the available cpu cores.\n" +
-                "Maze_Generation_Algorithm - may be one of the following:\n" +
+        private static String description = " Server Properties File\n" +
+                " Server_Thread_Count - may be a number or cpu,number meaning the server will have number*" +
+                " times the available cpu cores.\n" +
+                " Maze_Generation_Algorithm - may be one of the following:\n" +
                 "   * MyMazeGenerator.\n" +
                 "   * SimpleMazeGenerator.\n" +
                 "   * EmptyMazeGenerator.\n" +
-                "Maze_Solver_Algorithm - may be one of the following:\n" +
+                " Maze_Solver_Algorithm - may be one of the following:\n" +
                 "   * BestFirstSearch.\n" +
                 "   * BreadthFirstSearch.\n" +
                 "   * DepthFirstSearch.\n";

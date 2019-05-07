@@ -36,4 +36,9 @@ public class MazeState extends AState implements Serializable {
     public int hashCode() {
         return this.position.hashCode();
     }
+
+    @Override
+    public String toString() {
+        return position.toString();
+    }
 }

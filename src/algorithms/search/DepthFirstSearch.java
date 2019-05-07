@@ -27,7 +27,10 @@ public class DepthFirstSearch extends ASearchingAlgorithm {
         Stack<AState> stack = new Stack<>();
         stack.push(this.currentState);
         while (!stack.isEmpty()) {
-            if (stack.peek().equals(domain.getGoalState())) break;
+            if (stack.peek().equals(domain.getGoalState())) {
+                domain.getGoalState().parent = stack.pop().parent;
+                break;
+            }
             this.currentState = stack.pop();
             if (!evalSet.contains(this.currentState)) {
                 evalSet.add(this.currentState);

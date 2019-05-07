@@ -56,17 +56,24 @@ public class ServerStrategySolveSearchProblem implements IServerStrategy {
         System.out.println("Maze Solver shutting down.");
     }
 
+    /**
+     * Caches the generated solution to be used later.
+     * @param maze the maze the solution belongs to.
+     * @param solution the solution that should be cached.
+     */
     private void cacheSolution(Maze maze, Solution solution) {
         try {
             File cacheFile = new File(mazeCacheDir);
             if (!cacheFile.exists()) cacheFile.mkdirs();
 
+            //generate a hash of the maze.
             int cacheHashCode = Arrays.hashCode(maze.toByteArray());
 
+            //create a new file in the cache such that its name is the mazes hash.
             FileOutputStream fos = new FileOutputStream(mazeCacheDir + "/" + cacheHashCode);
             ObjectOutputStream oos = new ObjectOutputStream(fos);
 
-            System.out.println(Arrays.hashCode(maze.toByteArray()));
+            //write the solution into the file.
             oos.writeObject(solution);
             oos.flush();
             oos.close();
@@ -78,17 +85,27 @@ public class ServerStrategySolveSearchProblem implements IServerStrategy {
         }
     }
 
+    /**
+     * Checks the cache for a solution for the given maze.
+     * @param maze the maze that needs a solution.
+     * @return the solution to the maze if one exists, null otherwise.
+     */
     private Solution getCachedSolution(Maze maze) {
         Solution solution = null;
+
+        //generate a hash of the maze.
         int mazeHashCode = Arrays.hashCode(maze.toByteArray());
 
         try {
             File cacheDir = new File(mazeCacheDir);
             File[] mazeCaches = cacheDir.listFiles();
             if (mazeCaches == null) return null;
+            //iterate the files in the cache.
             for (File mazeCache : mazeCaches) {
                 int fileMazeHash = Integer.parseInt(mazeCache.getName());
                 if (mazeHashCode == fileMazeHash) {
+                    //if one of the file names (the corresponding maze's hash) is equal to the current maze's hash
+                    //read the file and return the solution.
                     FileInputStream fis = new FileInputStream(mazeCacheDir + "/" + fileMazeHash);
                     ObjectInputStream ois = new ObjectInputStream(fis);
                     solution = (Solution) ois.readObject();
@@ -106,6 +123,10 @@ public class ServerStrategySolveSearchProblem implements IServerStrategy {
         return solution;
     }
 
+    /**
+     * Clears the cache of all the mazes, and deletes the folder.
+     * @return true if and only if the cache is successfully cleared, false otherwise.
+     */
     private boolean clearCache() {
         File cacheDir = new File(mazeCacheDir);
         File[] cacheFiles = cacheDir.listFiles();

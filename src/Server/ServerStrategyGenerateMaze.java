@@ -2,7 +2,6 @@ package Server;
 
 import IO.MyCompressorOutputStream;
 import algorithms.mazeGenerators.IMazeGenerator;
-import algorithms.mazeGenerators.MyMazeGenerator;
 
 import java.io.*;
 
@@ -24,7 +23,7 @@ public class ServerStrategyGenerateMaze implements IServerStrategy {
 
             //serialize the maze.
             byte[] mazeData = generator
-                    .generate(mazeSize[Configurations.mazeSizesYIndex], mazeSize[Configurations.mazeSizesXIndex])
+                    .generate(mazeSize[Configurations.mazeSizesRowsIndex], mazeSize[Configurations.mazeSizesColsIndex])
                     .toByteArray();
 
             //compress the maze and send it to the client.

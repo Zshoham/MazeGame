@@ -47,14 +47,22 @@ public class MyDecompressorInputStream extends InputStream {
         return read;
     }
 
+    /**
+     * Decompress the data in 'compressedData' into 'dest'.
+     * @param dest the destination of the decompressed data.
+     * @param compressedData the compressed data.
+     */
     private void squashDecompress(byte[] dest, byte[] compressedData) {
+        //copy the header.
         System.arraycopy(compressedData, 0, dest, 0, Maze.HEADER_LENGTH);
 
         int resPos = Maze.HEADER_LENGTH;
         for (int i = Maze.HEADER_LENGTH; i < compressedData.length - 1; i++) {
             byte bitSet = compressedData[i];
             for (int j = 7; j >= 0 && resPos + j < dest.length; j--) {
+                //read left most bit from the bit set;
                 dest[resPos + j] = (byte) (bitSet & 0x01);
+                //move to the next bit.
                 bitSet = (byte) (bitSet >> 1);
             }
             resPos += 8;
@@ -63,6 +71,7 @@ public class MyDecompressorInputStream extends InputStream {
         byte remainder = (byte) ((dest.length - Maze.HEADER_LENGTH) % 8);
 
         if (remainder != 0) {
+            //if there are bits that didnt fully fit into a byte at the end decompress them.
             byte bitSet = compressedData[compressedData.length - 1];
             for (int i = remainder - 1; i >= 0 ; i--) {
                 dest[resPos + i] = (byte) (bitSet & 0x01);
@@ -70,6 +79,7 @@ public class MyDecompressorInputStream extends InputStream {
             }
         }
         else {
+            //if all the bits fit into bytes, decompress the last byte.
             byte bitSet = compressedData[compressedData.length - 1];
             for (int j = 7; j >= 0 && resPos + j < dest.length; j--) {
                 dest[resPos + j] = (byte) (bitSet & 0x01);

@@ -26,9 +26,13 @@ public class Server {
         isRunning = new AtomicBoolean(false);
     }
 
+    /**
+     * Starts the server.
+     */
     public void start() {
         new Thread( () -> run(), "Server Thread").start();
     }
+
 
     private void run() {
         clientPool = (ThreadPoolExecutor) Executors.newCachedThreadPool();
@@ -60,6 +64,9 @@ public class Server {
     }
 
 
+    /**
+     * Client Task of the server, executed each time a new connection is established.
+     */
     private static class ClientTask implements Runnable {
 
         private Socket clientSocket;
