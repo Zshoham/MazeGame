@@ -32,6 +32,8 @@ public final class Configurations {
 
     public static ISearchingAlgorithm getMazeSolver() { return properties.mazeSolver; }
 
+    public static boolean shouldDeleteCache() { return properties.deleteCache; }
+
     /**
      * The index of the array the Generate Maze Strategy gets where the numbers of rows in the maze is stores.
      */
@@ -42,7 +44,7 @@ public final class Configurations {
      */
     public static final int mazeSizesColsIndex = 1;
 
-    public static final boolean DEBUG = true;
+    public static final boolean DEBUG = false;
 
     /**
      * A wrapper class that stores the configurations and handles their storage.
@@ -59,17 +61,21 @@ public final class Configurations {
                 " Maze_Solver_Algorithm - may be one of the following:\n" +
                 "   * BestFirstSearch.\n" +
                 "   * BreadthFirstSearch.\n" +
-                "   * DepthFirstSearch.\n";
+                "   * DepthFirstSearch.\n" +
+                " Delete_Cache_On_Close - may be one of the following:\n" +
+                "   * T - when the solver strategy is finalized it will delete the solution cache.\n" +
+                "   * F - the solver strategy's maze cache will not be affected by server shutdown.\n";
 
         private boolean isCPUThreads;
         private int threadCount;
         private IMazeGenerator mazeGenerator;
         private ISearchingAlgorithm mazeSolver;
+        private boolean deleteCache;
 
         public ServerProperties(String path) {
             File propFile = new File(path);
             if (propFile.exists()) readProperties(path);
-            else initProperties(path, propFile);
+            else initProperties(path);
         }
 
         private void readProperties(String path) {
@@ -83,7 +89,7 @@ public final class Configurations {
                 parseThreadCount((String) properties.get("Server_Thread_Count"));
                 parseMazeGenerator((String) properties.get("Maze_Generation_Algorithm"));
                 parseMazeSolver((String) properties.get("Maze_Solver_Algorithm"));
-
+                parseDeleteCache((String) properties.get("Delete_Cache_On_Close"));
 
                 fis.close();
 
@@ -94,8 +100,7 @@ public final class Configurations {
             }
         }
 
-
-        private void initProperties(String path, File propFile) {
+        private void initProperties(String path) {
             try {
                 FileOutputStream fos = new FileOutputStream(path);
 
@@ -107,6 +112,8 @@ public final class Configurations {
                 this.mazeGenerator = new MyMazeGenerator();
                 properties.setProperty("Maze_Solver_Algorithm", "BestFirstSearch");
                 this.mazeSolver = new BestFirstSearch();
+                properties.setProperty("Delete_Cache_On_Close", "F");
+                this.deleteCache = false;
 
                 properties.store(fos, description);
 
@@ -141,7 +148,7 @@ public final class Configurations {
             if (value.toLowerCase().equals(("BestFirstSearch").toLowerCase())) this.mazeSolver = new BestFirstSearch();
             else if (value.toLowerCase().equals(("BreadthFirstSearch").toLowerCase())) this.mazeSolver = new BreadthFirstSearch();
             else if (value.toLowerCase().equals(("DepthFirstSearch").toLowerCase())) this.mazeSolver = new DepthFirstSearch();
-            else throw new RuntimeException("The value of the 'Maze Solver Algorithm' property is invalid.");
+            else throw new RuntimeException("The value of the 'Maze_Solver_Algorithm' property is invalid.");
         }
 
         private void parseMazeGenerator(String value) {
@@ -149,6 +156,12 @@ public final class Configurations {
             else if (value.toLowerCase().equals(("SimpleMazeGenerator").toLowerCase())) this.mazeGenerator = new SimpleMazeGenerator();
             else if (value.toLowerCase().equals(("EmptyMazeGenerator").toLowerCase())) this.mazeGenerator = new EmptyMazeGenerator();
             else throw new RuntimeException("The value of the 'Maze Generator Algorithm' property is invalid.");
+        }
+
+        private void parseDeleteCache(String value) {
+            if (value.toLowerCase().equals("t")) this.deleteCache = true;
+            else if (value.toLowerCase().equals("f")) this.deleteCache = false;
+            else throw new RuntimeException("The value of the 'Delete_Cache_On_Close' property is invalid.");
         }
     }
 }

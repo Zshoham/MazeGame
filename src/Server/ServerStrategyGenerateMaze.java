@@ -44,4 +44,9 @@ public class ServerStrategyGenerateMaze implements IServerStrategy {
     public void finalizeStrategy() {
         System.out.println("Maze Generator shutting down.");
     }
+
+    @Override
+    public String toString() {
+        return "Generate Maze";
+    }
 }

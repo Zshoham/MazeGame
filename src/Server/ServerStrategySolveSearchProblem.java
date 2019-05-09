@@ -52,7 +52,7 @@ public class ServerStrategySolveSearchProblem implements IServerStrategy {
 
     @Override
     public void finalizeStrategy() {
-        if (!clearCache()) System.out.println("Unable to delete cache.");
+        if (Configurations.shouldDeleteCache()) if (!clearCache()) System.out.println("Unable to delete cache.");
         System.out.println("Maze Solver shutting down.");
     }
 
@@ -139,5 +139,10 @@ public class ServerStrategySolveSearchProblem implements IServerStrategy {
         }
 
         return result && cacheDir.delete();
+    }
+
+    @Override
+    public String toString() {
+        return "Solve Maze";
     }
 }
