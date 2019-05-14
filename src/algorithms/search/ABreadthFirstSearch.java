@@ -59,7 +59,7 @@ public abstract class ABreadthFirstSearch extends ASearchingAlgorithm {
             }
         }
 
-        return new Solution(domain.getGoalState());
+        return new Solution(domain.getGoalState(), this.getName());
     }
 
     /**

@@ -43,7 +43,7 @@ public class DepthFirstSearch extends ASearchingAlgorithm {
             }
         }
 
-        return new Solution(domain.getGoalState());
+        return new Solution(domain.getGoalState(), this.getName());
     }
 
     @Override

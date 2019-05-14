@@ -11,8 +11,10 @@ import java.util.ArrayList;
 public class Solution implements Serializable {
 
     private ArrayList<AState> path;
+    private String algorithm;
 
-    public Solution(AState goalState) {
+    public Solution(AState goalState, String algorithm) {
+        this.algorithm = algorithm;
         path = new ArrayList<>();
         AState itr = goalState;
         while (itr.parent != null) {
@@ -28,4 +30,8 @@ public class Solution implements Serializable {
         return path;
     }
 
+    @Override
+    public String toString() {
+        return "Solved using - " + algorithm;
+    }
 }

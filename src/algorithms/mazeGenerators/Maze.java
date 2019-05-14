@@ -73,12 +73,15 @@ public class Maze implements Serializable {
        int size = Serializer.readInt(pointer, mazeData);
        pointer += 4;
 
-        assert (size != HEADER_LENGTH + (rows * cols)); //TODO: change to an exception or return null ?
+        if (size != HEADER_LENGTH + (rows * cols))
+            throw new IllegalArgumentException("Error recreating the maze, the serialized data was corrupted");
 
         this.maze = new int[rows][cols];
         for (int y = 0; y < this.rows; y++) {
             for (int x = 0; x < this.cols; x++) {
-                assert (mazeData[pointer + (x + y * cols)] > 1 || mazeData[pointer + (x + y * cols)] < 0); //TODO: change to an exception or return null ?
+                if (mazeData[pointer + (x + y * cols)] > 1 || mazeData[pointer + (x + y * cols)] < 0)
+                    throw new IllegalArgumentException("Error recreating the maze, maze data is corrupted.");
+
                 this.maze[y][x] = mazeData[pointer + (x + y * cols)];
             }
         }
@@ -125,7 +128,6 @@ public class Maze implements Serializable {
         return goalPosition;
     }
 
-    //TODO: depending on how the size should be handled, maybe make size the first part of the header.
     /**
      * Serializes the maze data into a byte array representation according to the following specification:
      *
