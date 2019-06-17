@@ -1,0 +1,7 @@
+*.*
+!.gitignore
+!.gitattributes
+!*.java
+!lib/*
+!src/main/resources/*/*
+!src/main/resources/*
