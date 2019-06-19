@@ -34,7 +34,7 @@ public class LauncherController implements Observer, IView, EventHandler<WindowE
     private static final Paint WHITE = Color.valueOf("0xffffff");
     private static final Paint YELLOW = Color.valueOf("0xf4f43f");
 
-    private ResourceManager resourceManager = ResourceManager.getInstance();;
+    private ResourceManager resourceManager = ResourceManager.getInstance();
 
     @FXML public TextField widthField;
     @FXML public TextField heightField;
@@ -148,6 +148,7 @@ public class LauncherController implements Observer, IView, EventHandler<WindowE
             if (saveName.isEmpty()) {
                 viewModel.startGame(selected, Integer.parseInt(this.widthField.getText()), Integer.parseInt(this.heightField.getText()));
                 resourceManager.loadCharacter(selected);
+                controller.setSaveName("");
             }
             else controller.setSaveName(saveName);
 

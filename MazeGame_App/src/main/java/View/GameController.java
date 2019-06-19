@@ -2,6 +2,7 @@ package View;
 
 import Model.Game.GAMESTATE;
 import Model.GamePersistenceManager;
+import Server.Configurations;
 import ViewModel.ViewModel;
 import algorithms.mazeGenerators.Position;
 import javafx.animation.AnimationTimer;
@@ -44,6 +45,7 @@ public class GameController extends AnimationTimer implements Observer, IView {
     private double miniMapZoom;
     private MediaPlayer backgroundMediaPlayer;
     private MediaPlayer openingMediaPlayer;
+    private MediaPlayer mediaPlayer;
     private String saveName;
 
 
@@ -61,15 +63,35 @@ public class GameController extends AnimationTimer implements Observer, IView {
         this.isFinished = false;
         this.gameStage.getIcons().add(resourceManager.getIcon());
 
-        openingMediaPlayer = new MediaPlayer(this.resourceManager.getClip(ResourceManager.WELCOME_CLIP));
-        openingMediaPlayer.setAutoPlay(false);
-        openingMediaPlayer.play();
+        if (Configurations.DEBUG) {
+            mediaPlayer = new MediaPlayer(this.resourceManager.getClip(ResourceManager.WELCOME_CLIP));
+            mediaPlayer.setAutoPlay(false);
+            mediaPlayer.setOnEndOfMedia(() -> {
+                mediaPlayer = new MediaPlayer(this.resourceManager.getClip(ResourceManager.BACKGROUND_CLIP));
+                mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+                mediaPlayer.setVolume(0.2);
+                mediaPlayer.setAutoPlay(false);
+                mediaPlayer.play();
+            });
+            if (!saveName.isEmpty()) {
+                mediaPlayer.getOnEndOfMedia().run();
+            }
+            else mediaPlayer.play();
+        }
+        else {
+            if (saveName.isEmpty()) {
+                openingMediaPlayer = new MediaPlayer(this.resourceManager.getClip(ResourceManager.WELCOME_CLIP));
+                openingMediaPlayer.setAutoPlay(false);
+                openingMediaPlayer.play();
+            }
 
-        backgroundMediaPlayer = new MediaPlayer(this.resourceManager.getClip(ResourceManager.BACKGROUND_CLIP));
-        backgroundMediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
-        backgroundMediaPlayer.setVolume(0.2);
-        backgroundMediaPlayer.setAutoPlay(false);
-        backgroundMediaPlayer.play();
+            backgroundMediaPlayer = new MediaPlayer(this.resourceManager.getClip(ResourceManager.BACKGROUND_CLIP));
+            backgroundMediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+            backgroundMediaPlayer.setVolume(0.2);
+            backgroundMediaPlayer.setAutoPlay(false);
+            backgroundMediaPlayer.play();
+        }
+
     }
 
     public void setViewModel(ViewModel viewModel) {
@@ -136,6 +158,15 @@ public class GameController extends AnimationTimer implements Observer, IView {
         Optional<String> result = saveNameDialog.showAndWait();
 
         result.ifPresent(saveName -> {
+            if(!saveName.matches("^[a-zA-Z0-9_-]+$")) {
+                Alert badName = new Alert(Alert.AlertType.ERROR);
+                badName.setTitle("Name Error");
+                badName.setHeaderText(null);
+                badName.setContentText("Please enter a save name composed of letters and numbers.");
+                badName.showAndWait();
+                return;
+            }
+
             if (GamePersistenceManager.getSaveList().contains(saveName)) {
                 Alert confirmOverride = new Alert(Alert.AlertType.CONFIRMATION);
                 confirmOverride.setTitle("Override Save");
@@ -180,8 +211,14 @@ public class GameController extends AnimationTimer implements Observer, IView {
         this.leftMenu.setVisible(false);
         this.start();
         this.gameCanvas.requestFocus();
-        backgroundMediaPlayer.play();
-        openingMediaPlayer.play();
+        if (Configurations.DEBUG) {
+            mediaPlayer.play();
+        }
+        else {
+            backgroundMediaPlayer.play();
+            if (saveName.isEmpty()) openingMediaPlayer.play();
+        }
+
         this.gameStage.setResizable(true);
     }
 
@@ -189,22 +226,39 @@ public class GameController extends AnimationTimer implements Observer, IView {
         this.leftMenu.setVisible(true);
         this.stop();
         this.gameStage.setTitle("Maze Game");
-        backgroundMediaPlayer.pause();
-        openingMediaPlayer.pause();
+        if (Configurations.DEBUG) {
+            mediaPlayer.pause();
+        }
+        else {
+            backgroundMediaPlayer.pause();
+            openingMediaPlayer.pause();
+        }
         this.gameStage.setResizable(false);
     }
 
     private void updateClosed() {
-        backgroundMediaPlayer.stop();
-        openingMediaPlayer.stop();
+        if (Configurations.DEBUG) {
+            mediaPlayer.stop();
+        }
+        else {
+            backgroundMediaPlayer.stop();
+            openingMediaPlayer.stop();
+        }
+        mediaPlayer.stop();
         this.stop();
         this.viewModel.deleteObserver(this);
     }
 
     private void updateSolved() {
         this.isFinished = true;
-        backgroundMediaPlayer.stop();
-        openingMediaPlayer.stop();
+        if (Configurations.DEBUG) {
+            mediaPlayer.stop();
+        }
+        else {
+            backgroundMediaPlayer.stop();
+            openingMediaPlayer.stop();
+        }
+        mediaPlayer.stop();
         this.viewModel.deleteObserver(this);
     }
 
